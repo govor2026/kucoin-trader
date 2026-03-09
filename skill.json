@@ -1,0 +1,41 @@
+{
+  "name": "kucoin-trader",
+  "version": "1.0.0",
+  "description": "Professional KuCoin (KC) trading system - multi-account support, spot/margin/futures trading, asset transfers.",
+  "skills": [
+    {
+      "name": "kucoin_accounts",
+      "description": "List all KuCoin account balances across all account types (spot, margin, futures)",
+      "trigger": ["kucoin账户", "kucoin资产", "KC账户", "KC资产", "kucoin balance", "kucoin accounts"]
+    },
+    {
+      "name": "kucoin_transfer",
+      "description": "Transfer assets between KuCoin account types (main, trade, margin, futures)",
+      "trigger": ["kucoin划转", "kucoin转账", "kucoin transfer"]
+    },
+    {
+      "name": "kucoin_trade",
+      "description": "Execute spot trades on KuCoin (market or limit orders)",
+      "trigger": ["kucoin交易", "kucoin买卖", "kucoin trade", "kucoin buy", "kucoin sell"]
+    },
+    {
+      "name": "kucoin_market",
+      "description": "Get market data and ticker information for trading pairs",
+      "trigger": ["kucoin行情", "kucoin价格", "kucoin market", "kucoin ticker"]
+    },
+    {
+      "name": "kucoin_report",
+      "description": "Generate comprehensive trading report including positions and history",
+      "trigger": ["kucoin报告", "kucoin报表", "kucoin report"]
+    }
+  ],
+  "config": {
+    "credentials": "~/.openclaw/credentials/kucoin.json",
+    "fields": {
+      "apiKey": "KuCoin API Key",
+      "secretKey": "KuCoin Secret Key",
+      "passphrase": "KuCoin API Passphrase",
+      "isSandbox": "Use sandbox environment (true/false)"
+    }
+  }
+}
