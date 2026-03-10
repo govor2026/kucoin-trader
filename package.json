@@ -8,7 +8,7 @@
     "accounts": "node scripts/accounts.js",
     "report": "node scripts/report.js",
     "market": "node scripts/market.js",
-    "trade": "node scripts/trade.js",
+    "spot": "node scripts/spot.js",
     "transfer": "node scripts/transfer.js"
   },
   "keywords": ["kucoin", "crypto", "trading", "spot", "margin", "futures", "exchange", "openclaw"],

@@ -31,132 +31,106 @@ export KUCOIN_IS_SANDBOX="true"  # for sandbox testing
 
 ## 📊 Basic Queries
 
-### Check All Account Balances
-```bash
-node workspace/skills/kucoin-trader/scripts/accounts.js
-```
-
-### Get Current Price
-```bash
-node workspace/skills/kucoin-trader/scripts/market.js --symbol BTC-USDT
-```
-
-### Get Trading Report
-```bash
-node workspace/skills/kucoin-trader/scripts/report.js
-```
+| Command | Description |
+|---------|-------------|
+| `node scripts/accounts.js` | List all account balances |
+| `node scripts/market.js --symbol BTC-USDT` | Get current price |
+| `node scripts/query.js` | Query all active orders |
 
 ## 💰 Asset Transfer
 
-### Transfer from Main (Funding) to Trade (Spot)
-```bash
-node workspace/skills/kucoin-trader/scripts/transfer.js --from main --to trade --currency USDT --amount 100
-```
+Supported types: `main`, `trade`, `margin`, `isolated`, `futures`
 
-### Transfer from Trade to Futures
 ```bash
-node workspace/skills/kucoin-trader/scripts/transfer.js --from trade --to futures --currency USDT --amount 100
-```
+# Main to Trade
+node scripts/transfer.js --from main --to trade --currency USDT --amount 100
 
-### Transfer from Futures to Main
-```bash
-node workspace/skills/kucoin-trader/scripts/transfer.js --from futures --to main --currency USDT --amount 100
-```
+# Trade to Futures
+node scripts/transfer.js --from trade --to futures --currency USDT --amount 100
 
-### Transfer between any accounts
-```bash
-# Supported types: main, trade, margin, isolated, futures
-node workspace/skills/kucoin-trader/scripts/transfer.js --from <FROM> --to <TO> --currency <CURRENCY> --amount <AMOUNT>
+# Any account transfer
+node scripts/transfer.js --from <FROM> --to <TO> --currency <CURRENCY> --amount <AMOUNT>
 ```
-
-### Supported Account Types
-| Type | Description |
-|------|-------------|
-| `main` | Funding Account - primary asset storage |
-| `trade` | Spot Trading Account - for trading |
-| `margin` | Cross Margin Account - leveraged trading |
-| `isolated` | Isolated Margin Account |
-| `futures` | Futures Account - perpetual contracts |
 
 ## ⚡ Spot Trading
 
-### Buy (Market Order)
 ```bash
-node workspace/skills/kucoin-trader/scripts/trade.js --symbol BTC-USDT --side buy --type market --size 0.001
+# Market Buy
+node scripts/spot.js trade --symbol BTC-USDT --side buy --type market --size 0.001
+
+# Limit Buy
+node scripts/spot.js trade --symbol ETH-USDT --side buy --type limit --price 2500 --size 0.1
+
+# Market Sell
+node scripts/spot.js trade --symbol BTC-USDT --side sell --type market --size 0.001
+
+# Limit Sell
+node scripts/spot.js trade --symbol ETH-USDT --side sell --type limit --price 3000 --size 0.1
+
+# Query orders
+node scripts/spot.js orders --symbol BTC-USDT
+
+# Cancel order
+node scripts/spot.js cancel --orderId xxx
 ```
 
-### Buy (Limit Order)
+## 🏦 Margin Trading (Cross Margin & Isolated Margin)
+
 ```bash
-node workspace/skills/kucoin-trader/scripts/trade.js --symbol ETH-USDT --side buy --type limit --price 2500 --size 0.1
+# --- Cross Margin (全仓杠杆) ---
+# Check borrowable
+node scripts/margin.js borrowable --currency USDT
+
+# Borrow
+node scripts/margin.js borrow --currency USDT --amount 100
+
+# Repay
+node scripts/margin.js repay --currency USDT --amount 50
+
+# Trade with leverage (5x)
+node scripts/margin.js trade --symbol BTC-USDT --side buy --size 0.01 --leverage 5
+
+# Query orders
+node scripts/margin.js orders --symbol BTC-USDT
+node scripts/margin.js all-orders
+
+# --- Isolated Margin (逐仓杠杆) ---
+# Check isolated account info
+node scripts/margin.js info-isolated --symbol BTC-USDT
+
+# Check borrowable
+node scripts/margin.js borrowable-isolated --symbol BTC-USDT
+
+# Borrow/Repay
+node scripts/margin.js borrow-isolated --symbol BTC-USDT --amount 0.01
+node scripts/margin.js repay-isolated --symbol BTC-USDT --amount 0.01
+
+# Trade with leverage (3x)
+node scripts/margin.js trade-isolated --symbol BTC-USDT --side buy --size 0.01 --leverage 3
+
+# Enable/Disable isolated margin
+node scripts/margin.js enable
+node scripts/margin.js disable
+
+# Query isolated orders
+node scripts/margin.js orders-isolated --symbol BTC-USDT
+
+# Transfer funds (use transfer.js)
+# node scripts/transfer.js --from trade --to isolated --currency BTC --amount 0.1
+# node scripts/transfer.js --from isolated --to trade --currency BTC --amount 0.1
 ```
 
-### Sell (Market Order)
+## 📈 Futures Trading
+
 ```bash
-node workspace/skills/kucoin-trader/scripts/trade.js --symbol BTC-USDT --side sell --type market --size 0.001
-```
+# Long
+node scripts/futures.js trade --symbol BTC-USDT --side buy --size 0.001 --leverage 10
 
-### Sell (Limit Order)
-```bash
-node workspace/skills/kucoin-trader/scripts/trade.js --symbol ETH-USDT --side sell --type limit --price 3000 --size 0.1
-```
+# Short
+node scripts/futures.js trade --symbol BTC-USDT --side sell --size 0.001 --leverage 10
 
-## 🏦 Margin Trading (Cross Margin)
-
-### Borrow from Margin Account
-```bash
-# 查看可借额度
-node workspace/skills/kucoin-trader/scripts/margin.js borrowable --currency USDT
-
-# 借款
-node workspace/skills/kucoin-trader/scripts/margin.js borrow --currency USDT --amount 100
-```
-
-### Repay Margin Loan
-```bash
-node workspace/skills/kucoin-trader/scripts/margin.js repay --currency USDT --amount 50
-```
-
-### Margin Trade (with leverage)
-```bash
-# 全仓杠杆买入 (5x杠杆)
-node workspace/skills/kucoin-trader/scripts/margin.js trade --symbol BTC-USDT --side buy --size 0.01 --leverage 5
-
-# 全仓杠杆卖出
-node workspace/skills/kucoin-trader/scripts/margin.js trade --symbol ETH-USDT --side sell --size 0.1 --leverage 3
-```
-
-## 🏝️ Isolated Margin Trading
-
-### Isolated Margin Trade
-```bash
-# 逐仓杠杆买入 (3x杠杆)
-node workspace/skills/kucoin-trader/scripts/isolated.js trade --symbol BTC-USDT --side buy --size 0.01 --leverage 3
-
-# 逐仓杠杆卖出
-node workspace/skills/kucoin-trader/scripts/isolated.js trade --symbol ETH-USDT --side sell --size 0.1 --leverage 5
-```
-
-### Check Isolated Borrow/Repay
-```bash
-node workspace/skills/kucoin-trader/scripts/isolated.js borrow --symbol BTC-USDT --amount 0.01
-node workspace/skills/kucoin-trader/scripts/isolated.js repay --symbol BTC-USDT --amount 0.01
-```
-
-## 📊 Futures Trading
-
-### Futures Buy (Long)
-```bash
-node workspace/skills/kucoin-trader/scripts/futures.js trade --symbol BTC-USDT --side buy --size 0.001 --leverage 10
-```
-
-### Futures Sell (Short)
-```bash
-node workspace/skills/kucoin-trader/scripts/futures.js trade --symbol BTC-USDT --side sell --size 0.001 --leverage 10
-```
-
-### Set Futures Leverage
-```bash
-node workspace/skills/kucoin-trader/scripts/futures.js leverage --symbol BTC-USDT --leverage 20
+# Set leverage
+node scripts/futures.js leverage --symbol BTC-USDT --leverage 20
 ```
 
 ## 📈 Supported Trading Pairs
@@ -181,19 +155,6 @@ node workspace/skills/kucoin-trader/scripts/futures.js leverage --symbol BTC-USD
 | `margin` | Cross Margin Account - leveraged trading (up to 5x) |
 | `isolated` | Isolated Margin Account |
 | `futures` | Futures Account - perpetual contracts |
-
-## 🔧 Available Scripts
-
-| Script | Description |
-|--------|-------------|
-| `accounts.js` | List all account balances |
-| `transfer.js` | Transfer between accounts |
-| `trade.js` | Execute spot trades |
-| `margin.js` | Cross margin trading (borrow/repay/trade) |
-| `isolated.js` | Isolated margin trading |
-| `futures.js` | Futures trading |
-| `market.js` | Get market ticker data |
-| `report.js` | Generate trading report |
 
 ## ⚠️ Safety Rules
 

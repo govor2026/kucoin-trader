@@ -208,6 +208,7 @@ async function placeOrder(client) {
 
     const sideLabel = side === 'buy' ? '做多' : '做空';
     const typeLabel = type === 'market' ? '市价' : '限价';
+    const marginMode = params.marginMode || params.m || 'CROSS';
 
     console.log('\n⚡ **合约下单**');
     console.log(`  合约: ${symbol}`);
@@ -222,7 +223,7 @@ async function placeOrder(client) {
 
     if (leverage) {
         console.log(`  杠杆: ${leverage}x`);
-        const leverageResult = await client.setLeverage(symbol, leverage);
+        const leverageResult = await client.setLeverage(symbol, leverage, marginMode);
         if (leverageResult.error) {
             console.error('❌ 设置杠杆失败:', leverageResult.error);
             process.exit(1);
@@ -237,7 +238,7 @@ async function placeOrder(client) {
         size: size,
         type: type,
         leverage: leverage || '125',
-        marginMode: 'CROSS'
+        marginMode: marginMode
     };
 
     if (price) {
