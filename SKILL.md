@@ -26,7 +26,6 @@ Save to `~/.openclaw/credentials/kucoin.json`:
 export KUCOIN_API_KEY="your_api_key"
 export KUCOIN_SECRET_KEY="your_secret_key"
 export KUCOIN_PASSPHRASE="your_passphrase"
-export KUCOIN_IS_SANDBOX="true"  # for sandbox testing
 ```
 
 ## 📊 Basic Queries
@@ -114,10 +113,6 @@ node scripts/margin.js disable
 
 # Query isolated orders
 node scripts/margin.js orders-isolated --symbol BTC-USDT
-
-# Transfer funds (use transfer.js)
-# node scripts/transfer.js --from trade --to isolated --currency BTC --amount 0.1
-# node scripts/transfer.js --from isolated --to trade --currency BTC --amount 0.1
 ```
 
 ## 📈 Futures Trading
@@ -167,8 +162,7 @@ node scripts/futures.js leverage --symbol BTC-USDT --leverage 20
 ## 🔗 Links
 
 - [API Documentation](https://docs.kucoin.com/)
-- [Create Account](https://www.kucoin.com/)
-- [Sandbox](https://sandbox.kucoin.com/)
+- [Create Account](https://www.kucoin.com/r/rf/QBSYNXQD)
 
 ---
 *Skill for KuCoin trading with multi-account support*
